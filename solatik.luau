@@ -373,8 +373,6 @@ local function wrap(instance: Instance?): instanceproxy?
 	proxy.set = set
 	proxy.apply = apply
 	proxy.create = create
-	
-	-- Add new functionality to proxy
 	proxy.descendantofclass = descendantofclass
 	proxy.descendantsofclass = descendantsofclass
 	proxy.ancestor = ancestor
