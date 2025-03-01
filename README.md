@@ -152,11 +152,15 @@ connection:disconnect()
 
 ## api reference:
 
-### modules:
+### module functions:
 
 - `from(instance: Instance): instanceproxy` - creates a new proxy wrapper for an instance
+- `create(classname: string, properties: {[string]: any}?): instanceproxy` - creates a new instance without a parent
+- `wrapall(instances: {Instance}): {instanceproxy}` - creates proxy wrappers for an array of instances
+- `getbytag(tag: string): {instanceproxy}` - gets all instances with a specific tag
+- `service(name: string): instanceproxy` - gets a game service by name (shorthand for from(game:GetService()))
 
-### proxy methods:
+### basic proxy methods:
 
 - `get(): Instance` - returns the raw roblox instance
 - `child(name: string): instanceproxy?` - gets a direct child by name
@@ -166,13 +170,50 @@ connection:disconnect()
 - `clone(): instanceproxy` - clones the instance and returns a proxy for the clone
 - `parent(): instanceproxy?` - gets the parent instance
 - `children(): {instanceproxy}` - gets all direct children as proxies
-- `connect(signal: string, callback: (...any) -> any): {disconnect: () -> nil}` - connects to an event
+- `connect(signal: string, callback: (...any) -> any): connection` - connects to an event
 - `wait(property: string?, timeout: number?): any` - waits for a property change
 - `set(properties: {[string]: any}): instanceproxy` - sets multiple properties at once
 - `apply(func: (instance: Instance) -> any): instanceproxy` - applies a custom function to the instance
 - `create(classname: string, properties: {[string]: any}?): instanceproxy` - creates a new instance as a child
 
+### advanced navigation methods:
+
+- `descendantofclass(classname: string): instanceproxy?` - finds first descendant of a specific class
+- `descendantsofclass(classname: string): {instanceproxy}` - gets all descendants of a specific class
+- `ancestor(name: string): instanceproxy?` - finds an ancestor by name (searches up the hierarchy)
+- `ancestors(): {instanceproxy}` - gets array of all ancestors up to root
+- `waitfor(childname: string, timeout: number?): instanceproxy?` - waits for a child with optional timeout
+- `waitforclass(classname: string, timeout: number?): instanceproxy?` - waits for child of specific class
+- `findwhere(predicate: (instance: Instance) -> boolean): instanceproxy?` - finds first instance matching a condition
+- `findallwhere(predicate: (instance: Instance) -> boolean): {instanceproxy}` - finds all instances matching a condition
+
+### instance manipulation:
+
+- `setparent(parent: Instance | instanceproxy?): instanceproxy` - sets parent (works with instances or proxies)
+- `setname(name: string): instanceproxy` - sets the name of the instance
+- `rename(pattern: string, replacement: string): instanceproxy` - renames using string pattern replacement
+- `batch(func: (proxy: instanceproxy) -> nil): instanceproxy` - executes multiple operations in a function block
+
+### attribute management:
+
+- `setattribute(name: string, value: attributevalue): instanceproxy` - sets an attribute with type safety
+- `getattribute(name: string): attributevalue` - gets an attribute value
+- `attributes(): {[string]: attributevalue}` - gets all attributes as a dictionary
+- `removeattribute(name: string): instanceproxy` - removes a specific attribute
+- `clearattributes(): instanceproxy` - removes all attributes
+
+### tag management:
+
+- `tag(tag: string): instanceproxy` - adds a CollectionService tag to the instance
+- `untag(tag: string): instanceproxy` - removes a CollectionService tag
+- `hastag(tag: string): boolean` - checks if instance has a CollectionService tag
+
+### event handling:
+
+- `oncedestroying(callback: () -> nil): connection` - runs callback once when instance is being destroyed
+- `oncedescendantadded(callback: (descendant: instanceproxy) -> nil): connection` - runs callback once when a descendant is added
+- `observeproperty(property: string, callback: (newValue: any, oldValue: any) -> nil): connection` - tracks property changes with old/new value comparison
+
 
 # final notes
-
 i hope you enjoy using this library, i enjoyed making it. if you think you can add something cool ro do something amazing make a pr, if something doesn't work quite right, feel free to make an issue! you can also contact me if there's a problem. cheers
